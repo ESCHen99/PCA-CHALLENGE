@@ -10,19 +10,20 @@
 #define N 1000001
 #define BITS 32
 #define BUFF_SIZE 4096
+#define index(i) i/BITS
 
 char count_r[N];
 unsigned int triplets[N];
 int prime[(N - 1) / BITS + 1];
 unsigned int buff[BUFF_SIZE];
 
-void clear_bit(int i){
+static inline __attribute__((always_inline)) void clear_bit(int i){
     unsigned short index = i/BITS;
     int mask = ~(1 << (i % BITS));
     prime[index] = prime[index] & mask;
 }
 
-unsigned char get_bit(int i){
+static inline __attribute__((always_inline)) unsigned char get_bit(int i){
     unsigned int res;
     unsigned short index = i/BITS;
     int mask = (1 << (i % BITS));
@@ -30,9 +31,23 @@ unsigned char get_bit(int i){
     return (res != 0);
 }
 
-int len(int n){
+// L'entrada �s menor a 1e6 per tant la sortida t� max 6 d�gits
+unsigned int len(unsigned int n){
+    
     int res = 1;
-    while (n > 0)
+    /*while (n > 0)
+    {
+        n /= 10;
+        res += (n > 0);
+    }
+    return res;*/
+	if(n <= 9) return 1;
+    if(n >= 10 && n <=99) return 2;
+    if(n >= 100 && n <= 999) return 3;
+    if(n >= 1000 && n <= 9999) return 4;
+    if(n >= 10000 && n <= 99999) return 5;
+    if(n >= 100000 && n <= 999999) return 6; 
+	while (n > 0)
     {
         n /= 10;
         res += (n > 0);
@@ -42,7 +57,7 @@ int len(int n){
 
 int main(){
     // Eratostenes
-    int i, j;
+	 int i, j;
     #ifdef __MY_TIME__
         clock_t begin = clock();
     #endif
@@ -61,12 +76,15 @@ int main(){
     #ifdef __MY_TIME__
         begin = clock();
     #endif
-        for (i = 3; i < N; i+=3)
-        {
+	// TODO: Check if over the array
+    for (i = 3; i < N; i+=6)
+    {
             clear_bit(i);
             count_r[i] = -1;
-        }
-        
+			clear_bit(i + 3);
+            count_r[i + 3] = -1;
+
+    }
     #ifdef __MY_TIME__
         end = clock();
         time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
@@ -109,25 +127,6 @@ int main(){
                     }
                 }
             }
-            // for (j = i; j < N; j+=i)
-            // {
-            //     clear_bit(j);
-            //     // Diria que tenir if és més ràpid
-
-            //     if (primer_4 == 3)
-            //     {
-            //         count_r[j] = -1;
-            //     }
-            //     else {
-            //         if (primer_4 == 1 && count_r[j] >= 0)
-            //         {
-            //             count_r[j]++;
-            //         }
-            //     }
-                
-            //     //count_r[j] += ((i % 4 == 1) & (count_r[j] >= 0));
-                
-            // }
         }
     }
     #ifdef __MY_TIME__
@@ -159,135 +158,19 @@ int main(){
         fprintf(stderr, "Triplets Calc: %f\n", time_spent);
     #endif
 
-    //triplets[i] = count;
- //   printf("%u \n", i);
     #ifdef __MY_TIME__
         begin = clock();
     #endif
     i = 0;
-    unsigned int second_num;
-    //unsigned int small_number_buffer[4];
-    // while (scanf("%u %u", &number, &second_num) && number != 0 && second_num != 0) // Si num és parell llavors fer num - 1 perquè els parells no fageixen res
-    // {
-
-    //     printf("%u\n", triplets[number]);
-    //     printf("%u\n", triplets[second_num]);
-
-    // }
-    //     while (scanf("%u\n%u\n%u\n%u", &small_number_buffer[0], &small_number_buffer[1], &small_number_buffer[2], &small_number_buffer[3])) // Si num és parell llavors fer num - 1 perquè els parells no fageixen res
-    // {
-
-    //     printf("%u\n", triplets[small_number_buffer[0]]);
-    //     printf("%u\n", triplets[small_number_buffer[1]]);
-    //     printf("%u\n", triplets[small_number_buffer[2]]);
-    //     printf("%u\n", triplets[small_number_buffer[3]]);
-    //     if (small_number_buffer[0] == 0 || small_number_buffer[1] == 0 || small_number_buffer[2] == 0 || small_number_buffer[3])
-    //     {
-    //         break;
-    //     }
-        
-    // }
-
-
-
-    // unsigned int buff[16];
-    // while (scanf("%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u", &buff[0], &buff[1], &buff[2], &buff[3], &buff[4], &buff[5], &buff[6], &buff[7], &buff[8],  &buff[9], &buff[10], &buff[11], &buff[12], &buff[13], &buff[14], &buff[15]) && buff[0] != 0 && buff[1] != 0 && buff[2] != 0 && buff[3] != 0 && buff[4] != 0 && buff[5] != 0 && buff[6] != 0 && buff[7] != 0 && buff[8] != 0 && buff[9] != 0 && buff[10] != 0 && buff[11] != 0 && buff[12] != 0 && buff[13] != 0 && buff[14] != 0 && buff[15] != 0) // Si num és parell llavors fer num - 1 perquè els parells no fageixen res
-    // {
-
-    //     printf("%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n%u\n", triplets[buff[0]], triplets[buff[1]], triplets[buff[2]], triplets[buff[3]], triplets[buff[4]], triplets[buff[5]], triplets[buff[6]], triplets[buff[7]], triplets[buff[8]], triplets[buff[9]], triplets[buff[10]], triplets[buff[11]], triplets[buff[12]], triplets[buff[13]], triplets[buff[14]], triplets[buff[15]]);
-    //     // if (small_number_buffer[0] == 0 || small_number_buffer[1] == 0 || small_number_buffer[2] == 0 || small_number_buffer[3])
-    //     // {
-    //     //     break;
-    //     // }
-        
-    // }
-
-    // if (buff[0] != 0)
-    // {
-    //     printf("%u\n", triplets[buff[0]]);
-    //     if (buff[1] != 0)
-    //     {
-    //         printf("%u\n", triplets[buff[1]]);
-    //         if(buff[2] != 0)
-    //         {
-    //             printf("%u\n", triplets[buff[2]]);
-    //             if (buff[3] != 0)
-    //             {
-    //                 printf("%u\n", triplets[buff[3]]);
-    //                 if (buff[4] != 0)
-    //                 {
-    //                     printf("%u\n", triplets[buff[4]]);
-    //                     if (buff[5] != 0)
-    //                     {
-    //                         printf("%u\n", triplets[buff[5]]);
-    //                         if(buff[6] != 0)
-    //                         {
-    //                             printf("%u\n", triplets[buff[6]]);
-    //                             if (buff[7] != 0)
-    //                             {
-    //                                 printf("%u\n", triplets[buff[7]]);
-    //                                     if (buff[8] != 0)
-    //                                     {
-    //                                         printf("%u\n", triplets[buff[8]]);
-    //                                         if (buff[9] != 0)
-    //                                         {
-    //                                             printf("%u\n", triplets[buff[9]]);
-    //                                             if(buff[10] != 0)
-    //                                             {
-    //                                                 printf("%u\n", triplets[buff[10]]);
-    //                                                 if (buff[11] != 0)
-    //                                                 {
-    //                                                     printf("%u\n", triplets[buff[11]]);
-    //                                                     if (buff[12] != 0)
-    //                                                     {
-    //                                                         printf("%u\n", triplets[buff[12]]);
-    //                                                         if (buff[13] != 0)
-    //                                                         {
-    //                                                             printf("%u\n", triplets[buff[13]]);
-    //                                                             if(buff[14] != 0)
-    //                                                             {
-    //                                                                 printf("%u\n", triplets[buff[14]]);
-    //                                                                 if (buff[15] != 0)
-    //                                                                 {
-    //                                                                     printf("%u\n", triplets[buff[15]]);
-    //                                                                 }
-                                                                    
-    //                                                             }
-    //                                                         }
-                                                            
-    //                                                     }
-    //                                                 }
-                                                    
-    //                                             }
-    //                                         }
-                                            
-    //                                     }
-    //                             }
-                                
-    //                         }
-    //                     }
-                        
-    //                 }
-    //             }
-                
-    //         }
-    //     }
-        
-    // }
-
-
-    char buff[1000000];
-    char write_buff[1000000 + 8]; // +8 pels q falten de l'anterior
+    
+    char buff[500000];
+    char write_buff[500000 + 8]; // +8 pels q falten de l'anterior
     int n;
-    int index = 0;
     int  fi = 0;
     int len_num, ant = 0, next;
-   // int number;
 
     // Si queden ja estan comptats a dintre de number :)
     while((n = read(0, buff, sizeof(buff))) > 0 && fi == 0)
-    
-    //while (  > 0)
     {
         j = 0;
         ant = 0;
@@ -304,29 +187,20 @@ int main(){
                     next = ant + len_num;
                     for (j = next - 1; j >= ant; --j, number /= 10)
                     {
-                        //printf("ant: %u j: %u\n", ant, j);
                         write_buff[j] = number % 10 + '0';
                     }
                     write_buff[next] = '\n';
                     ant = next + 1;
-                    //printf("%u\n", triplets[number]);
                     number = 0;
                 }
                 else{
                     fi = 1;
                 }
-                //number = 0;
             }   
         }
         write(1, write_buff, ant);
     }
 
-    /*
-    int n;
-    while ((n = read(1, &buff, sizeof(buff))) > 0)
-    {
-        printf("Hola %u\n", buff[21]);
-    }*/
     #ifdef __MY_TIME__
         end = clock();
         time_spent = (double)(end - begin) / CLOCKS_PER_SEC;

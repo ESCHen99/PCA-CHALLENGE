@@ -1,12 +1,14 @@
 CC=gcc
 flags=-Wall -Wpedantic -O0 -std=c99 -g -D __MY_TIME__
 
+all: prime_divisors
+
 main: main.c
 	$(CC) $(flags) main.c -o main
 
 test: prime_divisors
 	time ./prime_divisors < test.in > test.out
-	colordiff test.out test_main.out
+	diff test.out test_main.out
 
 time: prime_divisors
 	time ./prime_divisors < test.in > test.out -D
