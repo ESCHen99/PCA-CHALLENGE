@@ -1,5 +1,5 @@
 CC=gcc
-flags=-Wall -Wpedantic -O3 -std=c99 -g -D __MY_TIME__
+flags=-Wall -Wpedantic -O0 -std=c99 -g -D __MY_TIME__
 
 main: main.c
 	$(CC) $(flags) main.c -o main
