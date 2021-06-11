@@ -77,12 +77,12 @@ int main(){
         begin = clock();
     #endif
 	// TODO: Check if over the array
-    for (i = 3; i < N; i+=6)
+    for (i = 3; i < N; i+=3)
     {
             clear_bit(i);
             count_r[i] = -1;
-			clear_bit(i + 3);
-            count_r[i + 3] = -1;
+//			clear_bit(i + 3);
+  //          count_r[i + 3] = -1;
 
     }
     #ifdef __MY_TIME__
@@ -163,8 +163,8 @@ int main(){
     #endif
     i = 0;
     
-    char buff[500000];
-    char write_buff[500000 + 8]; // +8 pels q falten de l'anterior
+    char buff[600000];
+    char write_buff[600000 + 8]; // +8 pels q falten de l'anterior
     int n;
     int  fi = 0;
     int len_num, ant = 0, next;
@@ -190,7 +190,9 @@ int main(){
                         write_buff[j] = number % 10 + '0';
                     }
                     write_buff[next] = '\n';
-                    ant = next + 1;
+					//next = sprintf(&write_buff[ant], "%u\n", number);
+                    //ant += next;
+					ant = next + 1;
                     number = 0;
                 }
                 else{
